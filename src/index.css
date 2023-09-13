@@ -9,3 +9,26 @@
 #title-bar * {
 	-webkit-app-region: no-drag;
 }
+
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	background-color: #09090b;
+}
+
+*::-webkit-scrollbar-track {
+	border-radius: 100%;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: #27272a;
+	border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: #be123c;
+}
+
+*::-webkit-scrollbar-corner {
+	background: #09090b;
+}

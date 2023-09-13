@@ -5,7 +5,7 @@ type Props = ButtonProps & PropsWithChildren;
 
 const Button = (props: Props) => {
 	return (
-		<NextUIButton {...props} isIconOnly className={`flex items-center rounded-none bg-transparent w-[58px] max-h-full hover:bg-slate-800 ${props.className}`}>
+		<NextUIButton {...props} isIconOnly className={`flex items-center rounded-none bg-transparent w-[58px] h-full max-h-full hover:bg-zinc-800 ${props.className}`}>
 			{props.children}
 		</NextUIButton>
 	);
