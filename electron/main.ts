@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 
 // The built directory structure
@@ -21,7 +21,8 @@ function createWindow() {
 	win = new BrowserWindow({
 		icon: path.join(process.env.VITE_PUBLIC, 'app/img/app-icon.ico'),
 		autoHideMenuBar: true,
-
+		frame: false,
+		titleBarStyle: 'hidden',
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 		},
@@ -40,9 +41,25 @@ function createWindow() {
 	}
 }
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+ipcMain.on('window/quit', () => {
+	app.quit();
+});
+
+ipcMain.handle('window/maximize', () => {
+	const window = BrowserWindow.getFocusedWindow();
+	if (!window) return;
+	window.isMaximized() ? window.unmaximize() : window.maximize();
+	return window.isMaximized();
+});
+
+ipcMain.on('window/minimize', () => {
+	BrowserWindow.getFocusedWindow()?.minimize();
+});
+
+ipcMain.handle('window/isMaximized', () => {
+	return Boolean(BrowserWindow.getFocusedWindow()?.isMaximized());
+});
+
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit();
@@ -51,8 +68,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-	// On OS X it's common to re-create a window in the app when the
-	// dock icon is clicked and there are no other windows open.
 	if (BrowserWindow.getAllWindows().length === 0) {
 		createWindow();
 	}
