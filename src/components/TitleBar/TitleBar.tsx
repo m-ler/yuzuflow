@@ -1,9 +1,11 @@
 import { Maximize2, Menu, Minimize2, Minus, X } from 'lucide-react';
 import Button from './Button';
 import { useEffect, useState } from 'react';
+import { navDrawerState } from '../../store/nav-drawer';
 
 const TitleBar = () => {
 	const [maximized, setMaximized] = useState(false);
+	const { toggle: toggleNavigationDrawer } = navDrawerState();
 
 	useEffect(() => {
 		window.appWindow.isMaximized().then(result => setMaximized(result));
@@ -17,7 +19,7 @@ const TitleBar = () => {
 
 	return (
 		<div id="title-bar" className="w-screen flex items-center bg-zinc-950 border-b border-b-zinc-900 h-[36px]">
-			<Button isIconOnly className="w-auto px-4">
+			<Button isIconOnly className="w-auto px-4" onClick={toggleNavigationDrawer}>
 				<Menu size={16} />
 			</Button>
 			<div className="flex ml-auto h-full max-h-full">

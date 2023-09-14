@@ -15,7 +15,8 @@
     "lucide-react": "^0.276.0",
     "postcss": "^8.4.29",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",
