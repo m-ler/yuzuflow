@@ -1,12 +1,11 @@
+import NavDrawer from '@/components/NavDrawer';
+import TitleBar from '@/components/TitleBar';
 import { Tabs, Tab } from '@nextui-org/react';
 import { useState } from 'react';
-import TitleBar from './components/TitleBar';
-import NavDrawer from './components/NavDrawer';
 
-function App() {
+const Root = () => {
 	const [selectedTab, setSelectedTab] = useState<React.Key>('mainline');
 	const setTab = (key: React.Key) => setSelectedTab(key);
-
 	return (
 		<div className="flex flex-col min-h-screen">
 			<TitleBar />
@@ -20,9 +19,10 @@ function App() {
 						</Tabs>
 					</section>
 				</main>
+				N
 			</div>
 		</div>
 	);
-}
+};
 
-export default App;
+export default Root;

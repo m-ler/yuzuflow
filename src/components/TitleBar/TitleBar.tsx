@@ -1,7 +1,7 @@
 import { Maximize2, Menu, Minimize2, Minus, X } from 'lucide-react';
 import Button from './Button';
 import { useEffect, useState } from 'react';
-import { navDrawerState } from '../../store/nav-drawer';
+import { navDrawerState } from '@/store/nav-drawer';
 
 const TitleBar = () => {
 	const [maximized, setMaximized] = useState(false);

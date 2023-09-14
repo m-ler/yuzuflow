@@ -1,9 +1,9 @@
 import { DownloadCloud, MonitorDown, Settings } from 'lucide-react';
-import NavButton from './NavButton';
 import { useEffect, useMemo } from 'react';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { AnimatePresence, motion } from 'framer-motion';
-import { navDrawerState } from '../../store/nav-drawer';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { navDrawerState } from '@/store/nav-drawer';
+import NavButton from './NavButton';
 
 const NavDrawer = () => {
 	const smallScreen = useMediaQuery('(max-width: 640px)');
