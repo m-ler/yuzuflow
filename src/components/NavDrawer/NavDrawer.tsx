@@ -17,13 +17,19 @@ const NavDrawer = () => {
 			<nav className="flex flex-col bg-zinc-950 border-r border-r-zinc-900 grow py-4 w-full h-full">
 				<ul className="flex flex-col">
 					<li>
-						<NavButton startContent={<DownloadCloud size={14} />}>Download</NavButton>
+						<NavButton route="/" startContent={<DownloadCloud size={14} />}>
+							Download
+						</NavButton>
 					</li>
 					<li>
-						<NavButton startContent={<MonitorDown size={14} />}>Installed</NavButton>
+						<NavButton route="/installed" startContent={<MonitorDown size={14} />}>
+							Installed
+						</NavButton>
 					</li>
 					<li>
-						<NavButton startContent={<Settings size={14} />}>Settings</NavButton>
+						<NavButton route="/settings" startContent={<Settings size={14} />}>
+							Settings
+						</NavButton>
 					</li>
 				</ul>
 				<span className="block mt-auto text-zinc-500 text-center text-xs">YuzuFlow 1.0</span>

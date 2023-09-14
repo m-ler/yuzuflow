@@ -1,10 +1,24 @@
+import Download from '@/routes/download/Download';
+import Installed from '@/routes/installed/Installed';
 import Root from '@/routes/Root';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Settings from '@/routes/settings/Settings';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
 	{
 		path: '/',
 		element: <Root />,
+		children: [
+			{ index: true, element: <Download /> },
+			{
+				path: '/installed',
+				element: <Installed />,
+			},
+			{
+				path: '/settings',
+				element: <Settings />,
+			},
+		],
 	},
 ]);
 
