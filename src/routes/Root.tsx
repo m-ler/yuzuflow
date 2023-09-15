@@ -4,11 +4,11 @@ import { Outlet } from 'react-router-dom';
 
 const Root = () => {
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen max-h-screen overflow-hidden">
 			<TitleBar />
-			<div className="flex grow relative">
+			<div className="flex grow relative min-h-0">
 				<NavDrawer />
-				<main className="flex flex-col w-full p-4 grow overflow-hidden">
+				<main className="flex flex-col w-full grow overflow-hidden">
 					<Outlet />
 				</main>
 			</div>

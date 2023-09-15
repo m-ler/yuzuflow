@@ -1,12 +1,15 @@
 import { PropsWithChildren } from 'react';
 import NextUIProvider from './NextUIProvider';
 import ReactRouterProvider from './ReactRouterProvider';
+import ReactQueryProvider from './ReactQueryProvider';
 
 const Providers = ({ children }: PropsWithChildren) => {
 	return (
 		<NextUIProvider>
-			<ReactRouterProvider />
-			{children}
+			<ReactQueryProvider>
+				<ReactRouterProvider />
+				{children}
+			</ReactQueryProvider>
 		</NextUIProvider>
 	);
 };

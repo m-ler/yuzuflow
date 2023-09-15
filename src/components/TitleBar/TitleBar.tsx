@@ -18,7 +18,7 @@ const TitleBar = () => {
 	useEffect(() => {}, []);
 
 	return (
-		<div id="title-bar" className="w-screen flex items-center bg-zinc-950 border-b border-b-zinc-900 h-[36px]">
+		<div id="title-bar" className="w-screen flex items-center bg-zinc-950 border-b border-b-zinc-900 h-[36px] shrink-0">
 			<Button isIconOnly className="w-auto px-4" onClick={toggleNavigationDrawer}>
 				<Menu size={16} />
 			</Button>

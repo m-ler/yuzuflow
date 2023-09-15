@@ -1,5 +1,11 @@
+import PageTransition from '@/components/Transitions/PageTransition';
+
 const Settings = () => {
-	return <span className="text-slate-100">Settings</span>;
+	return (
+		<PageTransition>
+			<span className="text-slate-100">Settings</span>;
+		</PageTransition>
+	);
 };
 
 export default Settings;
