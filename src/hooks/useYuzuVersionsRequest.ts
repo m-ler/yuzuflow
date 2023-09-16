@@ -14,6 +14,7 @@ export default ({ type, page }: Params) => {
 		queryKey: [type, page],
 		queryFn: () => request(page, 10),
 		staleTime: Infinity,
+		keepPreviousData: true,
 	});
 
 	console.log(query.data);

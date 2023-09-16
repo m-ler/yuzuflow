@@ -5,8 +5,9 @@ import { useState } from 'react';
 
 const Download = () => {
 	const [selectedTab, setSelectedTab] = useState<React.Key>('mainline');
+	const [page, setPage] = useState(1);
 	const setTab = (key: React.Key) => setSelectedTab(key);
-	useYuzuVersionsRequest({ type: 'mainline', page: 1 });
+	const foo = useYuzuVersionsRequest({ type: 'mainline', page });
 
 	return (
 		<PageTransition>
@@ -22,8 +23,9 @@ const Download = () => {
 						</Skeleton>
 					))}
 				</div>
-
-				<Pagination total={10} initialPage={1} className="ml-auto mt-auto overflow-visible" />
+				{true && (
+					<Pagination total={foo.data?.pageCount || 0} page={page} onChange={setPage} className="ml-auto mt-auto overflow-visible" />
+				)}
 			</section>
 		</PageTransition>
 	);
