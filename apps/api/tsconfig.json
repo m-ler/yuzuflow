@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"module": "NodeNext",
+		"moduleResolution": "Node",
+		"strict": true,
+		"skipLibCheck": true,
+		"baseUrl": "./src",
+		"outDir": "./dist",
+		"allowSyntheticDefaultImports": true
+	},
+}
