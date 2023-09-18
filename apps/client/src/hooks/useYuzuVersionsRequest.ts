@@ -1,4 +1,4 @@
-import { getEAVersions, getMainlineVersions } from '@/lib/yuzu/yuzu-versions';
+import { getEAVersions, getMainlineVersions } from '@/lib/yuzu/yuzu-versions-request';
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
