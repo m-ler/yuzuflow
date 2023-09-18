@@ -1,11 +1,24 @@
 {
 	"compilerOptions": {
-		"module": "NodeNext",
-		"moduleResolution": "Node",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
 		"strict": true,
 		"skipLibCheck": true,
-		"baseUrl": "./src",
+		"baseUrl": ".",
 		"outDir": "./dist",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@shared": [
+				"./../../packages/shared"
+			]
+		}
+	},
+	"include": [
+		"./src/**/*"
+	],
+	"ts-node": {
+		"esm": true
 	},
 }
