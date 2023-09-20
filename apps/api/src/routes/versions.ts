@@ -1,8 +1,11 @@
 import { VersionsRequest } from '@shared'
 import express, { Request, Response } from 'express'
+import apicache from 'apicache'
+
+const cache = apicache.middleware('6 hours', (req: Request, res: Response) => res.statusCode === 200)
 const versionsRouter = express.Router()
 
-versionsRouter.get('/mainline', (req: Request, res: Response) => {
+versionsRouter.get('/mainline', cache, (req: Request, res: Response) => {
 	const result: VersionsRequest = {
 		data: [],
 		page: 1,
@@ -12,7 +15,7 @@ versionsRouter.get('/mainline', (req: Request, res: Response) => {
 	res.send(JSON.stringify(result))
 })
 
-versionsRouter.get('/ea', (req: Request, res: Response) => {
+versionsRouter.get('/ea', cache, (req: Request, res: Response) => {
 	const result: VersionsRequest = {
 		data: [],
 		page: 1,
