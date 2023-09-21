@@ -24,7 +24,7 @@ function createWindow() {
 		frame: false,
 		titleBarStyle: 'hidden',
 		width: 1080,
-		height: 720,
+		height: 768,
 		minWidth: 320,
 		minHeight: 320,
 		webPreferences: {

@@ -15,9 +15,8 @@ export default ({ type, page }: Params) => {
 		queryFn: () => request(page, 10),
 		staleTime: Infinity,
 		keepPreviousData: true,
+		retry: false,
 	})
-
-	console.log(query.data)
 
 	return query
 }
