@@ -24,7 +24,7 @@ const VersionsTable = ({ data, loading, page, onPageChange, pageCount }: Props) 
 					},
 				}}
 			>
-				{loading ? <SkeletonList length={10} /> : (data || []).map((x) => <YuzuVersionItem data={x} key={x.name} />)}
+				{loading ? <SkeletonList length={8} /> : (data || []).map((x) => <YuzuVersionItem data={x} key={x.name} />)}
 			</motion.div>
 			{pageCount && (
 				<Pagination

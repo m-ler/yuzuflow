@@ -23,8 +23,8 @@ function createWindow() {
 		autoHideMenuBar: true,
 		frame: false,
 		titleBarStyle: 'hidden',
-		width: 1080,
-		height: 768,
+		width: 1024,
+		height: 724,
 		minWidth: 320,
 		minHeight: 320,
 		webPreferences: {

@@ -21,30 +21,32 @@ const Download = () => {
 				} duration-500`}
 				style={{ backgroundImage: 'url(/app/img/background-gradient.png)' }}
 			></div>
-			<section className="flex flex-col gap-4 mx-auto max-w-screen-lg h-full max-h-full p-4 overflow-auto">
-				<Tabs
-					color="primary"
-					selectedKey={selectedTab}
-					onSelectionChange={(value) => {
-						setPage(1)
-						setTab(value)
-					}}
-					classNames={{ tabList: 'bg-zinc-800', cursor: selectedTab === 'ea' ? 'bg-amber-600' : 'bg-rose-600' }}
-				>
-					<Tab key="mainline" title="Mainline"></Tab>
-					<Tab key="ea" title="Early Access"></Tab>
-				</Tabs>
-				{request.error ? (
-					<RequestErrorState />
-				) : (
-					<VersionsTable
-						loading={request.isFetching}
-						page={page}
-						pageCount={request.data?.pageCount || 0}
-						onPageChange={(page) => setPage(page)}
-						data={request.data?.data || []}
-					/>
-				)}
+			<section className="w-full h-full max-h-full p-4  overflow-auto">
+				<div className="flex flex-col gap-4 mx-auto w-full h-full max-w-screen-lg">
+					<Tabs
+						color="primary"
+						selectedKey={selectedTab}
+						onSelectionChange={(value) => {
+							setPage(1)
+							setTab(value)
+						}}
+						classNames={{ tabList: 'bg-zinc-800', cursor: selectedTab === 'ea' ? 'bg-amber-600' : 'bg-rose-600' }}
+					>
+						<Tab key="mainline" title="Mainline"></Tab>
+						<Tab key="ea" title="Early Access"></Tab>
+					</Tabs>
+					{request.error ? (
+						<RequestErrorState />
+					) : (
+						<VersionsTable
+							loading={request.isFetching}
+							page={page}
+							pageCount={request.data?.pageCount || 0}
+							onPageChange={(page) => setPage(page)}
+							data={request.data?.data || []}
+						/>
+					)}
+				</div>
 			</section>
 		</PageTransition>
 	)
