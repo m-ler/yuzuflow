@@ -1,6 +1,6 @@
 import { GITHUB_PAGINATION_LIMIT, YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL } from './../config/constants.js'
 import { octokit } from './../config/octokit.js'
-import { VersionsRequest, YuzuVersion } from '@shared'
+import { VersionsRequest, YuzuType, YuzuVersion } from '@shared'
 import express, { Request, Response } from 'express'
 import apicache from 'apicache'
 import { RepositoryRelease } from 'src/types.js'
@@ -31,7 +31,7 @@ type QueryParams = {
 	page: string
 }
 
-const getReleases = async (req: Request, res: Response, type: 'mainline' | 'ea') => {
+const getReleases = async (req: Request, res: Response, type: YuzuType) => {
 	const { per_page, page } = req.query as unknown as QueryParams
 
 	try {

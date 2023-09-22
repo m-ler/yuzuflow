@@ -12,3 +12,5 @@ export type Paginated<TData> = {
 }
 
 export type VersionsRequest = Paginated<YuzuVersion>
+
+export type YuzuType = 'mainline' | 'ea'

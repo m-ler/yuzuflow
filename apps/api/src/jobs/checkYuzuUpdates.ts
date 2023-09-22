@@ -2,18 +2,19 @@ import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL } from './../config/constants.
 import { octokit } from './../config/octokit.js'
 import cron from 'node-cron'
 import apicache from 'apicache'
+import { YuzuType } from '@shared'
 
 const checkingUpdate = {
 	mainline: false,
 	ea: false,
 }
 
-const latestVersionsIds: Record<'mainline' | 'ea', number | undefined> = {
+const latestVersionsIds: Record<YuzuType, number | undefined> = {
 	mainline: undefined,
 	ea: undefined,
 }
 
-const checkReleaseUpdates = (type: 'mainline' | 'ea') => {
+const checkReleaseUpdates = (type: YuzuType) => {
 	if (checkingUpdate[type]) return
 	checkingUpdate[type] = true
 
