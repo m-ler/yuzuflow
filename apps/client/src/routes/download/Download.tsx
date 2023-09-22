@@ -5,9 +5,10 @@ import { Tabs, Tab } from '@nextui-org/react'
 import { useState } from 'react'
 import { YuzuType } from '@shared'
 import RequestErrorState from './components/RequestErrorState'
+import useStorageState from '@/hooks/useStorageState'
 
 const Download = () => {
-	const [selectedTab, setSelectedTab] = useState<React.Key>('mainline')
+	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
 	const setTab = (key: React.Key) => setSelectedTab(key)
 	const [page, setPage] = useState(1)
 
