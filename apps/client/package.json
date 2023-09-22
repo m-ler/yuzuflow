@@ -12,6 +12,7 @@
     "@nextui-org/react": "^2.1.12",
     "autoprefixer": "^10.4.15",
     "axios": "^1.5.0",
+    "electron-window-state": "^5.0.3",
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.276.0",
     "postcss": "^8.4.29",
