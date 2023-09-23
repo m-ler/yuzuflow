@@ -25,8 +25,8 @@ export default ({ type, page }: Params) => {
 	const query = useQuery({
 		queryKey: [type, page],
 		queryFn: () => request(page, 8),
-		staleTime: Infinity,
-		keepPreviousData: true,
+		staleTime: 1000 * 30,
+		keepPreviousData: true, 
 		retry: false,
 		refetchOnWindowFocus: false,
 	})
