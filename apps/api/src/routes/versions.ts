@@ -3,7 +3,7 @@ import { octokit } from './../config/octokit.js'
 import { VersionsRequest, YuzuType, YuzuVersion } from '@shared'
 import express, { Request, Response } from 'express'
 import apicache from 'apicache'
-import { RepositoryRelease } from 'src/types.js'
+import { ReleaseAsset, RepositoryRelease } from 'src/types.js'
 
 const cache = apicache.middleware('6 hours', (req: Request, res: Response) => res.statusCode === 200)
 const versionsRouter = express.Router()
@@ -19,11 +19,28 @@ const getPageCountFromLinkHeader = (header: string, pageSize: number) => {
 	return 0
 }
 
-const formatReleaseListToYuzuVersionList = (data: RepositoryRelease[]): YuzuVersion[] =>
+const getReleaseAssetLink = (type: YuzuType, assetList: ReleaseAsset[]) => {
+	const getLink = (prefix: string, extensions: string[]) => {
+		for (const ex of extensions) {
+			for (const asset of assetList) {
+				if (asset.name.includes(prefix) && asset.name.includes(ex)) return asset.browser_download_url
+			}
+		}
+
+		return null
+	}
+
+	const getMainlineAsset = () => getLink('yuzu-windows', ['.7z', '.tar.xz'])
+	const getEarlyAcessAsset = () => getLink('Windows-Yuzu', ['.zip', '.7z'])
+
+	return type === 'mainline' ? getMainlineAsset() : getEarlyAcessAsset()
+}
+
+const formatReleaseListToYuzuVersionList = (data: RepositoryRelease[], type: YuzuType): YuzuVersion[] =>
 	data.map((x) => ({
 		name: x.tag_name,
 		date: x.created_at,
-		assetUrl: x.assets[0].browser_download_url,
+		assetUrl: getReleaseAssetLink(type, x.assets),
 	}))
 
 type QueryParams = {
@@ -39,7 +56,7 @@ const getReleases = async (req: Request, res: Response, type: YuzuType) => {
 		const releases = await octokit.request(`GET /${repoUrl}?per_page=${per_page}&page=${page}`)
 		const pageCount = getPageCountFromLinkHeader(releases.headers.link || '', parseInt(per_page))
 		const result: VersionsRequest = {
-			data: formatReleaseListToYuzuVersionList(releases.data),
+			data: formatReleaseListToYuzuVersionList(releases.data, type),
 			page: parseInt(page),
 			pageCount,
 			pageSize: parseInt(per_page),

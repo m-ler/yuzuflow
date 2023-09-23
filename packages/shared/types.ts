@@ -1,7 +1,7 @@
 export type YuzuVersion = {
 	name: string
 	date: string
-	assetUrl: string
+	assetUrl: string | null
 }
 
 export type Paginated<TData> = {
