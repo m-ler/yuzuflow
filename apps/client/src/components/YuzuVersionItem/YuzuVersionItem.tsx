@@ -26,7 +26,12 @@ const YuzuVersionItem = ({ data }: Props) => {
 			</div>
 			<div>
 				<motion.div whileHover="hover">
-					<Button isIconOnly size="sm" className="bg-zinc-950/50 hover:bg-cyan-700">
+					<Button
+						isIconOnly
+						size="sm"
+						className="bg-zinc-950/50 hover:bg-cyan-700"
+						onClick={() => console.log(data.assetUrl)}
+					>
 						<motion.div
 							animate={{ y: '0%' }}
 							variants={{

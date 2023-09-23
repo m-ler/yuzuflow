@@ -36,9 +36,11 @@ const getReleaseAssetLink = (type: YuzuType, assetList: ReleaseAsset[]) => {
 	return type === 'mainline' ? getMainlineAsset() : getEarlyAcessAsset()
 }
 
+const getReleaseName = (release: RepositoryRelease, type: YuzuType) => (type === 'ea' ? release.tag_name : release.name)
+
 const formatReleaseListToYuzuVersionList = (data: RepositoryRelease[], type: YuzuType): YuzuVersion[] =>
 	data.map((x) => ({
-		name: x.tag_name,
+		name: getReleaseName(x, type),
 		date: x.created_at,
 		assetUrl: getReleaseAssetLink(type, x.assets),
 	}))

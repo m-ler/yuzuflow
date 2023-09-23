@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'node:path'
 import windowStateKeeper from 'electron-window-state'
 
@@ -23,7 +23,7 @@ function createWindow() {
 		defaultWidth: 1024,
 		defaultHeight: 724,
 	})
-	
+
 	win = new BrowserWindow({
 		icon: path.join(process.env.VITE_PUBLIC, 'app/img/app-icon.ico'),
 		autoHideMenuBar: true,
@@ -80,6 +80,14 @@ ipcMain.on('window/minimize', () => {
 
 ipcMain.handle('window/isMaximized', () => {
 	return Boolean(BrowserWindow.getFocusedWindow()?.isMaximized())
+})
+
+ipcMain.handle('dialog/select-directory', () => {
+	const selectedDirectory = dialog.showOpenDialogSync({
+		properties: ['openDirectory'],
+	})
+
+	return selectedDirectory
 })
 
 app.on('window-all-closed', () => {

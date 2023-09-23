@@ -11,7 +11,6 @@ const Download = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
 	const setTab = (key: React.Key) => setSelectedTab(key)
 	const [page, setPage] = useState(1)
-
 	const request = useYuzuVersionsRequest({ type: selectedTab as YuzuType, page })
 
 	return (

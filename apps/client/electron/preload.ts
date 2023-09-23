@@ -1,4 +1,4 @@
-import { ipcRenderer, contextBridge } from 'electron';
+import { ipcRenderer, contextBridge } from 'electron'
 
 export const api = {
 	appWindow: {
@@ -7,8 +7,11 @@ export const api = {
 		isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window/isMaximized'),
 		quit: () => ipcRenderer.send('window/quit'),
 	},
-};
+	fileExplorer: {
+		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('dialog/select-directory'),
+	},
+}
 
-Object.keys(api).forEach(key => {
-	contextBridge.exposeInMainWorld(key, api[key as keyof typeof api]);
-});
+Object.keys(api).forEach((key) => {
+	contextBridge.exposeInMainWorld(key, api[key as keyof typeof api])
+})
