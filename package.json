@@ -1,6 +1,7 @@
 {
 	"name": "yuzuflow",
 	"version": "1.0.0",
+	"type": "module",
 	"workspaces": [
 		"apps/*",
 		"packages/*"

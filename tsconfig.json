@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"@api/*": [
+				"apps/api/src/*"
+			],
+			"@client/*": [
+				"client/api/src/*"
+			],
+			"@shared/*": [
+				"packages/shared/*"
+			],
+		},
+	},
+	"include": [
+		"/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	],
+}
