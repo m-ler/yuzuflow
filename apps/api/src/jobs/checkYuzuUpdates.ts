@@ -1,8 +1,7 @@
-import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL } from './../config/constants.js'
-import { octokit } from './../config/octokit.js'
 import cron from 'node-cron'
 import apicache from 'apicache'
-import { YuzuType } from '@shared'
+import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuType } from '@shared/index.js'
+import { octokit } from '@/config/octokit.js'
 
 const checkingUpdate = {
 	mainline: false,

@@ -1,3 +1,4 @@
+import { YuzuType } from 'shared'
 import { ipcRenderer, contextBridge } from 'electron'
 
 export const api = {
@@ -9,6 +10,9 @@ export const api = {
 	},
 	fileExplorer: {
 		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('dialog/select-directory'),
+	},
+	yuzu: {
+		downloadRelease: (assetId: number, type: YuzuType) => ipcRenderer.invoke('download-release', assetId, type),
 	},
 }
 

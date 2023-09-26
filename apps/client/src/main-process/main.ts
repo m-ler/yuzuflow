@@ -1,17 +1,12 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'node:path'
 import windowStateKeeper from 'electron-window-state'
+import axios from 'axios'
+import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuType } from 'shared'
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.js
-// │
 process.env.DIST = path.join(__dirname, '../dist')
+console.log(process.env.DIST);
+
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 let win: BrowserWindow | null
@@ -88,6 +83,26 @@ ipcMain.handle('dialog/select-directory', () => {
 	})
 
 	return selectedDirectory
+})
+
+ipcMain.handle('download-release', (_, assetId: number, type: YuzuType) => {
+	console.log('WILL DONWLOAD: ', assetId)
+	const repoUrl = type === 'ea' ? YUZU_EA_REPO_URL : YUZU_MAINLINE_REPO_URL
+	axios
+		.get(`https://api.github.com/${repoUrl}/assets/${assetId}`, {
+			headers: {
+				Accept: 'application/octet-stream',
+			},
+			onDownloadProgress: (e) => {
+				console.log(e.progress)
+			},
+		})
+		.then((res) => {
+			console.log(new Blob([res.data]).size)
+		})
+		.catch((error) => {
+			console.error(error)
+		})
 })
 
 app.on('window-all-closed', () => {

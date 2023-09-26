@@ -1,9 +1,9 @@
-import { GITHUB_PAGINATION_LIMIT, YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL } from './../config/constants.js'
-import { octokit } from './../config/octokit.js'
-import { VersionsRequest, YuzuType, YuzuVersion } from '@shared'
+import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, VersionsRequest, YuzuType, YuzuVersion } from '@shared/index.js'
 import express, { Request, Response } from 'express'
 import apicache from 'apicache'
-import { ReleaseAsset, RepositoryRelease } from 'src/types.js'
+import { ReleaseAsset, RepositoryRelease } from 'types.js'
+import { GITHUB_PAGINATION_LIMIT } from '@/config/constants.js'
+import { octokit } from '@/config/octokit.js'
 
 const cache = apicache.middleware('6 hours', (req: Request, res: Response) => res.statusCode === 200)
 const versionsRouter = express.Router()
@@ -19,11 +19,11 @@ const getPageCountFromLinkHeader = (header: string, pageSize: number) => {
 	return 0
 }
 
-const getReleaseAssetLink = (type: YuzuType, assetList: ReleaseAsset[]) => {
+const getReleaseAssetId = (type: YuzuType, assetList: ReleaseAsset[]) => {
 	const getLink = (prefix: string, extensions: string[]) => {
 		for (const ex of extensions) {
 			for (const asset of assetList) {
-				if (asset.name.includes(prefix) && asset.name.includes(ex)) return asset.browser_download_url
+				if (asset.name.includes(prefix) && asset.name.includes(ex)) return asset.id
 			}
 		}
 
@@ -42,7 +42,8 @@ const formatReleaseListToYuzuVersionList = (data: RepositoryRelease[], type: Yuz
 	data.map((x) => ({
 		name: getReleaseName(x, type),
 		date: x.created_at,
-		assetUrl: getReleaseAssetLink(type, x.assets),
+		assetId: getReleaseAssetId(type, x.assets),
+		type,
 	}))
 
 type QueryParams = {

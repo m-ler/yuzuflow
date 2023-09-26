@@ -2,7 +2,7 @@ import SkeletonList from '@/components/YuzuVersionItem/SkeletonList'
 import YuzuVersionItem from '@/components/YuzuVersionItem/YuzuVersionItem'
 import { Pagination } from '@nextui-org/react'
 import { motion } from 'framer-motion'
-import { YuzuVersion } from '@shared'
+import { YuzuVersion } from 'shared'
 
 type Props = {
 	data: YuzuVersion[]

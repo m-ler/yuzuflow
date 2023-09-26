@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import path from 'node:path';
-import electron from 'vite-plugin-electron/simple';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import path from 'node:path'
+import electron from 'vite-plugin-electron/simple'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
 	resolve: {
@@ -11,12 +11,12 @@ export default defineConfig({
 		react(),
 		electron({
 			main: {
-				entry: 'electron/main.ts',
+				entry: path.join(__dirname, 'src/main-process/main.ts'),
 			},
 			preload: {
-				input: path.join(__dirname, 'electron/preload.ts'),
+				input: path.join(__dirname, 'src/main-process/preload.ts'),
 			},
 			renderer: {},
 		}),
 	],
-});
+})
