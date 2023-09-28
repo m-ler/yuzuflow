@@ -1,13 +1,11 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import windowStateKeeper from 'electron-window-state'
-import axios from 'axios'
-import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuType } from 'shared'
+import './ipc-main-events'
 
 process.env.DIST = path.join(__dirname, '../dist')
-console.log(process.env.DIST);
-
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -57,53 +55,6 @@ function createWindow() {
 		win.loadFile(path.join(process.env.DIST, 'index.html'))
 	}
 }
-
-ipcMain.on('window/quit', () => {
-	app.quit()
-})
-
-ipcMain.handle('window/maximize', () => {
-	const window = BrowserWindow.getFocusedWindow()
-	if (!window) return
-	window.isMaximized() ? window.unmaximize() : window.maximize()
-	return window.isMaximized()
-})
-
-ipcMain.on('window/minimize', () => {
-	BrowserWindow.getFocusedWindow()?.minimize()
-})
-
-ipcMain.handle('window/isMaximized', () => {
-	return Boolean(BrowserWindow.getFocusedWindow()?.isMaximized())
-})
-
-ipcMain.handle('dialog/select-directory', () => {
-	const selectedDirectory = dialog.showOpenDialogSync({
-		properties: ['openDirectory'],
-	})
-
-	return selectedDirectory
-})
-
-ipcMain.handle('download-release', (_, assetId: number, type: YuzuType) => {
-	console.log('WILL DONWLOAD: ', assetId)
-	const repoUrl = type === 'ea' ? YUZU_EA_REPO_URL : YUZU_MAINLINE_REPO_URL
-	axios
-		.get(`https://api.github.com/${repoUrl}/assets/${assetId}`, {
-			headers: {
-				Accept: 'application/octet-stream',
-			},
-			onDownloadProgress: (e) => {
-				console.log(e.progress)
-			},
-		})
-		.then((res) => {
-			console.log(new Blob([res.data]).size)
-		})
-		.catch((error) => {
-			console.error(error)
-		})
-})
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {

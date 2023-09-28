@@ -2,16 +2,41 @@ import PageTransition from '@/components/Transitions/PageTransition'
 import VersionsTable from '@/components/VersionsTable/VersionsTable'
 import useYuzuVersionsRequest from '@/hooks/useYuzuVersionsRequest'
 import { Tabs, Tab } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { YuzuType } from 'shared'
 import RequestErrorState from './components/RequestErrorState'
 import useStorageState from '@/hooks/useStorageState'
+import { IpcRendererEvent } from 'electron'
+import { downloadsState } from '@/store/downloads'
 
 const Download = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
 	const setTab = (key: React.Key) => setSelectedTab(key)
 	const [page, setPage] = useState(1)
 	const request = useYuzuVersionsRequest({ type: selectedTab as YuzuType, page })
+	const { addDownload, removeDownload, setDownloadProgress, setDownloadCompleted, setDownloadError } = downloadsState()
+
+	useEffect(() => {
+		const onDownloadStart = (_: IpcRendererEvent, id: number) => addDownload(id)
+		const onDownloadUpdate = (_: IpcRendererEvent, id: number, progress: number) => setDownloadProgress(id, progress)
+		const onDownloadRemoved = (_: IpcRendererEvent, id: number) => removeDownload(id)
+		const onDownloadCompleted = (_: IpcRendererEvent, id: number) => setDownloadCompleted(id)
+		const onDownloadError = (_: IpcRendererEvent, id: number) => setDownloadError(id)
+
+		window.yuzu.downloadEvents.onStart(onDownloadStart)
+		window.yuzu.downloadEvents.onUpdate(onDownloadUpdate)
+		window.yuzu.downloadEvents.onRemove(onDownloadRemoved)
+		window.yuzu.downloadEvents.onCompleted(onDownloadCompleted)
+		window.yuzu.downloadEvents.onError(onDownloadError)
+
+		return () => {
+			window.yuzu.downloadEvents.removeOnStart(onDownloadStart)
+			window.yuzu.downloadEvents.removeOnUpdate(onDownloadUpdate)
+			window.yuzu.downloadEvents.removeOnRemove(onDownloadRemoved)
+			window.yuzu.downloadEvents.removeOnCompleted(onDownloadCompleted)
+			window.yuzu.downloadEvents.removeOnError(onDownloadError)
+		}
+	}, [])
 
 	return (
 		<PageTransition>
