@@ -5,13 +5,19 @@ import useStorageState from '@/hooks/useStorageState'
 
 type Props = {
 	type: YuzuType
+	onChange?: (directory: string) => void
 }
 
-const DownloadFolderInput = ({ type }: Props) => {
+const DownloadFolderInput = ({ type, onChange }: Props) => {
 	const [directory, setDirectory] = useStorageState(`${type}-download-directory`, '')
+
 	const onClick = async () => {
 		const response = await window.fileExplorer.selectDirectory()
-		if (response?.[0]) setDirectory(response[0])
+		const newValue = response?.[0]
+		if (newValue) {
+			setDirectory(newValue)
+			onChange?.(newValue)
+		}
 	}
 
 	return (

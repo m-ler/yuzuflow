@@ -30,9 +30,10 @@ ipcMain.handle('dialog/select-directory', () => {
 	return selectedDirectory
 })
 
-ipcMain.handle('download-release', (_, assetId: number, type: YuzuType) => {
+ipcMain.handle('download-release', (_, assetId: number, type: YuzuType, directory: string) => {
 	const contents = getMainWindow().webContents
 	const repoUrl = type === 'ea' ? YUZU_EA_REPO_URL : YUZU_MAINLINE_REPO_URL
+	console.log(directory)
 
 	contents.send('release-download/start', assetId)
 	axios
@@ -44,11 +45,13 @@ ipcMain.handle('download-release', (_, assetId: number, type: YuzuType) => {
 				if (e.progress) contents.send('release-download/update', assetId, e.progress)
 			},
 		})
-		.then((res) => {
+		.then(() => {
 			//console.log(new Blob([res.data]).size)
 			contents.send('release-download/completed', assetId)
 		})
-		.catch(() => {
+		.catch((error) => {
+			console.error(error)
+
 			contents.send('release-download/error', assetId)
 		})
 })

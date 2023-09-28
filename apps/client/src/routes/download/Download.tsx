@@ -30,11 +30,11 @@ const Download = () => {
 		window.yuzu.downloadEvents.onError(onDownloadError)
 
 		return () => {
-			window.yuzu.downloadEvents.removeOnStart(onDownloadStart)
-			window.yuzu.downloadEvents.removeOnUpdate(onDownloadUpdate)
-			window.yuzu.downloadEvents.removeOnRemove(onDownloadRemoved)
-			window.yuzu.downloadEvents.removeOnCompleted(onDownloadCompleted)
-			window.yuzu.downloadEvents.removeOnError(onDownloadError)
+			window.yuzu.downloadEvents.removeOnStart()
+			window.yuzu.downloadEvents.removeOnUpdate()
+			window.yuzu.downloadEvents.removeOnRemove()
+			window.yuzu.downloadEvents.removeOnCompleted()
+			window.yuzu.downloadEvents.removeOnError()
 		}
 	}, [])
 
@@ -64,6 +64,7 @@ const Download = () => {
 						<RequestErrorState />
 					) : (
 						<VersionsTable
+							type={selectedTab}
 							loading={request.isFetching}
 							page={page}
 							pageCount={request.data?.pageCount || 0}

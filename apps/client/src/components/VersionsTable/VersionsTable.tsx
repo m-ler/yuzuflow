@@ -2,7 +2,7 @@ import SkeletonList from '@/components/YuzuVersionItem/SkeletonList'
 import YuzuVersionItem from '@/components/YuzuVersionItem/YuzuVersionItem'
 import { Pagination } from '@nextui-org/react'
 import { motion } from 'framer-motion'
-import { YuzuVersion } from 'shared'
+import { YuzuType, YuzuVersion } from 'shared'
 
 type Props = {
 	data: YuzuVersion[]
@@ -10,9 +10,10 @@ type Props = {
 	page: number
 	pageCount: number
 	onPageChange: (page: number) => void
+	type: YuzuType
 }
 
-const VersionsTable = ({ data, loading, page, onPageChange, pageCount }: Props) => {
+const VersionsTable = ({ data, loading, page, onPageChange, pageCount, type }: Props) => {
 	return (
 		<div className="flex flex-col justify-end gap-4">
 			<motion.div
@@ -24,7 +25,11 @@ const VersionsTable = ({ data, loading, page, onPageChange, pageCount }: Props) 
 					},
 				}}
 			>
-				{loading ? <SkeletonList length={8} /> : (data || []).map((x) => <YuzuVersionItem data={x} key={x.name} />)}
+				{loading ? (
+					<SkeletonList length={8} />
+				) : (
+					(data || []).map((x) => <YuzuVersionItem data={x} key={x.name} type={type} />)
+				)}
 			</motion.div>
 			{pageCount && (
 				<Pagination
