@@ -30,7 +30,7 @@ const getReleaseAssetId = (type: YuzuType, assetList: ReleaseAsset[]) => {
 		return null
 	}
 
-	const getMainlineAsset = () => getLink('yuzu-windows', ['.7z', '.tar.xz'])
+	const getMainlineAsset = () => getLink('yuzu-windows', ['.7z'])
 	const getEarlyAcessAsset = () => getLink('Windows-Yuzu', ['.zip', '.7z'])
 
 	return type === 'mainline' ? getMainlineAsset() : getEarlyAcessAsset()

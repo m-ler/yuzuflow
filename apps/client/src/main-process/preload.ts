@@ -27,7 +27,7 @@ export const api = {
 				ipcRenderer.on('release-download/completed', callback),
 			removeOnCompleted: () => ipcRenderer.removeAllListeners('release-download/completed'),
 
-			onError: (callback: (_: IpcRendererEvent, id: number) => unknown) =>
+			onError: (callback: (_: IpcRendererEvent, id: number, message: string) => unknown) =>
 				ipcRenderer.on('release-download/error', callback),
 			removeOnError: () => ipcRenderer.removeAllListeners('release-download/error'),
 

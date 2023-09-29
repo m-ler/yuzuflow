@@ -1,2 +1,9 @@
 import { BrowserWindow } from 'electron'
-export const getMainWindow = () => BrowserWindow.getAllWindows()[0]
+
+type AppWindow = 'main'
+
+const appWindows: Record<AppWindow, BrowserWindow | null> = {
+	main: null,
+}
+
+export default appWindows

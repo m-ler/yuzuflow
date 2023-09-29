@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import windowStateKeeper from 'electron-window-state'
 import './ipc-main-events'
+import appWindows from './app-windows'
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
@@ -47,6 +48,8 @@ function createWindow() {
 	win.webContents.on('did-finish-load', () => {
 		win?.webContents.send('main-process-message', new Date().toLocaleString())
 	})
+
+	appWindows.main = win
 
 	if (VITE_DEV_SERVER_URL) {
 		win.loadURL(VITE_DEV_SERVER_URL)

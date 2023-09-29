@@ -8,6 +8,7 @@ import RequestErrorState from './components/RequestErrorState'
 import useStorageState from '@/hooks/useStorageState'
 import { IpcRendererEvent } from 'electron'
 import { downloadsState } from '@/store/downloads'
+import toast from 'react-hot-toast'
 
 const Download = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
@@ -21,7 +22,10 @@ const Download = () => {
 		const onDownloadUpdate = (_: IpcRendererEvent, id: number, progress: number) => setDownloadProgress(id, progress)
 		const onDownloadRemoved = (_: IpcRendererEvent, id: number) => removeDownload(id)
 		const onDownloadCompleted = (_: IpcRendererEvent, id: number) => setDownloadCompleted(id)
-		const onDownloadError = (_: IpcRendererEvent, id: number) => setDownloadError(id)
+		const onDownloadError = (_: IpcRendererEvent, id: number, message: string) => {
+			toast.error(message)
+			setDownloadError(id, message)
+		}
 
 		window.yuzu.downloadEvents.onStart(onDownloadStart)
 		window.yuzu.downloadEvents.onUpdate(onDownloadUpdate)

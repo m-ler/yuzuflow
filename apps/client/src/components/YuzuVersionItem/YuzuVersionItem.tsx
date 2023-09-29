@@ -5,6 +5,7 @@ import { Download } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { downloadsState } from '@/store/downloads'
 import DialogFolderInput from '../DialogFolderInput/DialogFolderInput'
+import toast from 'react-hot-toast'
 
 type Props = {
 	data: YuzuVersion
@@ -24,7 +25,7 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 	const downloadOnClick = async () => {
 		const directory = JSON.parse(localStorage.getItem(`${type}-download-directory`) || 'null')
 		if (!data.assetId) {
-			alert('Could not find release.')
+			toast.error('It seems that the files for this release are not available.')
 			return
 		}
 

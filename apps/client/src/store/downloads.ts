@@ -3,7 +3,7 @@ import { create } from 'zustand'
 type DownloadProgress = {
 	completed: boolean
 	progress: number
-	error: boolean
+	error: string | null
 }
 
 type DownloadsState = {
@@ -12,7 +12,7 @@ type DownloadsState = {
 	removeDownload: (id: number) => void
 	setDownloadProgress: (id: number, progress: number) => void
 	setDownloadCompleted: (id: number) => void
-	setDownloadError: (id: number) => void
+	setDownloadError: (id: number, message: string) => void
 }
 
 export const downloadsState = create<DownloadsState>((set) => ({
@@ -22,7 +22,7 @@ export const downloadsState = create<DownloadsState>((set) => ({
 			const clone = state.currentDownloads
 			clone[id] = {
 				completed: false,
-				error: false,
+				error: null,
 				progress: 0,
 			}
 			return { currentDownloads: clone }
@@ -38,23 +38,26 @@ export const downloadsState = create<DownloadsState>((set) => ({
 	setDownloadProgress: (id, progress) => {
 		set((state) => {
 			const clone = state.currentDownloads
-			clone[id].progress = progress
-			return { currentDownloads: clone } 
+			if (clone[id]) clone[id].progress = progress
+			return { currentDownloads: clone }
 		})
 	},
 	setDownloadCompleted: (id) => {
 		setTimeout(() => {
 			set((state) => {
 				const clone = state.currentDownloads
-				clone[id].completed = true
+				if (clone[id]) clone[id].completed = true
 				return { currentDownloads: clone }
 			})
 		}, 1000)
 	},
-	setDownloadError: (id) => {
+	setDownloadError: (id, message) => {
 		set((state) => {
 			const clone = state.currentDownloads
-			clone[id].error = true
+			if (clone[id]) {
+				clone[id].error = message
+				clone[id].progress = 1
+			}
 			return { currentDownloads: clone }
 		})
 	},
