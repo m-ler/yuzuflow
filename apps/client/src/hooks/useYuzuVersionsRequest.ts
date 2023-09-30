@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { VersionsRequest, YuzuType } from '@shared'
+import { VersionsRequest, YuzuType } from 'shared'
 import { API_BASE_URL } from '@/config/constants'
 import axios from 'axios'
 

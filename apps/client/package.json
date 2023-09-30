@@ -1,4 +1,15 @@
 {
+	"build": {
+		"extraResources": [
+			{
+				"from": "./node_modules/7zip-bin",
+				"to": "extraResources",
+				"filter": [
+					"**/*"
+				]
+			}
+		]
+	},
 	"name": "client",
 	"private": true,
 	"version": "0.0.0",
