@@ -1,5 +1,5 @@
-import NavDrawer from '@/components/NavDrawer';
-import TitleBar from '@/components/TitleBar';
+import NavDrawer from '@/renderer/components/NavDrawer';
+import TitleBar from '@/renderer/components/TitleBar';
 import { Outlet } from 'react-router-dom';
 
 const Root = () => {

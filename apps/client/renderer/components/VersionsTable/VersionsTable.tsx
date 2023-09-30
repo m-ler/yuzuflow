@@ -1,5 +1,5 @@
-import SkeletonList from '@/components/YuzuVersionItem/SkeletonList'
-import YuzuVersionItem from '@/components/YuzuVersionItem/YuzuVersionItem'
+import SkeletonList from '@/renderer/components/YuzuVersionItem/SkeletonList'
+import YuzuVersionItem from '@/renderer/components/YuzuVersionItem/YuzuVersionItem'
 import { Pagination } from '@nextui-org/react'
 import { motion } from 'framer-motion'
 import { YuzuType, YuzuVersion } from 'shared'

@@ -3,7 +3,7 @@ import { YuzuType, YuzuVersion } from 'shared'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Download } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { downloadsState } from '@/store/downloads'
+import { downloadsState } from '@/renderer/store/downloads'
 import DialogFolderInput from '../DialogFolderInput/DialogFolderInput'
 import toast from 'react-hot-toast'
 

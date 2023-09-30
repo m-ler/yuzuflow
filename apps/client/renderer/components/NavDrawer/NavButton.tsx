@@ -1,5 +1,5 @@
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { navDrawerState } from '@/store/nav-drawer';
+import { useMediaQuery } from '@/renderer/hooks/useMediaQuery';
+import { navDrawerState } from '@/renderer/store/nav-drawer'
 import { Button, ButtonProps } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { NavLink } from 'react-router-dom';

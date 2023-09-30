@@ -1,5 +1,5 @@
-import DownloadFolderInput from '@/components/DownloadFolderInput/DownloadFolderInput'
-import PageTransition from '@/components/Transitions/PageTransition'
+import DownloadFolderInput from '@/renderer/components/DownloadFolderInput/DownloadFolderInput'
+import PageTransition from '@/renderer/components/Transitions/PageTransition'
 
 const Settings = () => {
 	return (

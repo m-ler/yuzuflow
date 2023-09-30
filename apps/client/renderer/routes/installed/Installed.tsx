@@ -1,4 +1,4 @@
-import PageTransition from '@/components/Transitions/PageTransition';
+import PageTransition from '@/renderer/components/Transitions/PageTransition'
 
 const Installed = () => {
 	return (

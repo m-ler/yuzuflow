@@ -1,13 +1,13 @@
-import PageTransition from '@/components/Transitions/PageTransition'
-import VersionsTable from '@/components/VersionsTable/VersionsTable'
-import useYuzuVersionsRequest from '@/hooks/useYuzuVersionsRequest'
+import PageTransition from '@/renderer/components/Transitions/PageTransition'
+import VersionsTable from '@/renderer/components/VersionsTable/VersionsTable'
+import useYuzuVersionsRequest from '@/renderer/hooks/useYuzuVersionsRequest'
 import { Tabs, Tab } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import { YuzuType } from 'shared'
 import RequestErrorState from './components/RequestErrorState'
-import useStorageState from '@/hooks/useStorageState'
+import useStorageState from '@/renderer/hooks/useStorageState'
 import { IpcRendererEvent } from 'electron'
-import { downloadsState } from '@/store/downloads'
+import { downloadsState } from '@/renderer/store/downloads'
 import toast from 'react-hot-toast'
 
 const Download = () => {

@@ -1,7 +1,7 @@
-import Download from '@/routes/download/Download';
-import Installed from '@/routes/installed/Installed';
-import Root from '@/routes/Root';
-import Settings from '@/routes/settings/Settings';
+import Download from '@/renderer/routes/download/Download';
+import Installed from '@/renderer/routes/installed/Installed';
+import Root from '@/renderer/routes/Root';
+import Settings from '@/renderer/routes/settings/Settings';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
 const router = createHashRouter([

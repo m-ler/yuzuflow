@@ -1,13 +1,4 @@
 /// <reference types="vite-plugin-electron/electron-env" />
-import { api } from './preload'
-
-type ExtendWindowWithAPIKeys<T> = {
-	[K in keyof T]: T[K]
-}
-
-declare global {
-	interface Window extends ExtendWindowWithAPIKeys<typeof api> {}
-}
 
 declare namespace NodeJS {
 	interface ProcessEnv {

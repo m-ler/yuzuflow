@@ -1,7 +1,7 @@
 import { Input } from '@nextui-org/react'
 import { FolderOpen } from 'lucide-react'
 import { YuzuType } from 'shared'
-import useStorageState from '@/hooks/useStorageState'
+import useStorageState from '@/renderer/hooks/useStorageState'
 
 type Props = {
 	type: YuzuType

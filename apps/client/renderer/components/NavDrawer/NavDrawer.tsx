@@ -1,8 +1,8 @@
 import { DownloadCloud, MonitorDown, Settings } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { navDrawerState } from '@/store/nav-drawer';
+import { useMediaQuery } from '@/renderer/hooks/useMediaQuery'
+import { navDrawerState } from '@/renderer/store/nav-drawer'
 import NavButton from './NavButton';
 
 const NavDrawer = () => {
