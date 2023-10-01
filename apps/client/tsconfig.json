@@ -28,6 +28,9 @@
 				"./*"
 			],
 		},
+		"types": [
+			"electron-vite/node"
+		]
 	},
 	"include": [
 		"renderer",

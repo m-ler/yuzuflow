@@ -3,14 +3,11 @@ import path from 'node:path'
 import windowStateKeeper from 'electron-window-state'
 import './ipc-main-events'
 import appWindows from './app-windows'
+import appIcon from '../public/app/img/app-icon.ico?asset'
 
-process.env.DIST = path.join(__dirname, '../dist')
-process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win: BrowserWindow | null
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
-const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
 	const mainWindowState = windowStateKeeper({
@@ -19,7 +16,7 @@ function createWindow() {
 	})
 
 	win = new BrowserWindow({
-		icon: path.join(process.env.VITE_PUBLIC, 'app/img/app-icon.ico'),
+		icon: appIcon,
 		autoHideMenuBar: true,
 		frame: false,
 		titleBarStyle: 'hidden',
@@ -30,7 +27,8 @@ function createWindow() {
 		x: mainWindowState.x,
 		y: mainWindowState.y,
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, '../preload/index.js'),
+			webSecurity: false,
 		},
 	})
 
@@ -44,18 +42,16 @@ function createWindow() {
 
 	mainWindowState.manage(win)
 
-	// Test active push message to Renderer-process.
 	win.webContents.on('did-finish-load', () => {
 		win?.webContents.send('main-process-message', new Date().toLocaleString())
 	})
 
 	appWindows.main = win
 
-	if (VITE_DEV_SERVER_URL) {
-		win.loadURL(VITE_DEV_SERVER_URL)
+	if (process.env['ELECTRON_RENDERER_URL']) {
+		win.loadURL(process.env['ELECTRON_RENDERER_URL'])
 	} else {
-		// win.loadFile('dist/index.html')
-		win.loadFile(path.join(process.env.DIST, 'index.html'))
+		win.loadFile(path.join(__dirname, '../renderer/index.html'))
 	}
 }
 
