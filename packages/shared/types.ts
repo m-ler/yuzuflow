@@ -3,6 +3,7 @@ export type YuzuVersion = {
 	date: string
 	assetId: number | null
 	type: YuzuType
+	versionTag: string
 }
 
 export type Paginated<TData> = {

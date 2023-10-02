@@ -44,6 +44,7 @@ const formatReleaseListToYuzuVersionList = (data: RepositoryRelease[], type: Yuz
 		date: x.created_at,
 		assetId: getReleaseAssetId(type, x.assets),
 		type,
+		versionTag: getReleaseName(x, type).replace(/\s/g, ''),
 	}))
 
 type QueryParams = {
