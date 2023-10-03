@@ -12,8 +12,8 @@ export const api = {
 		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('dialog/select-directory'),
 	},
 	yuzu: {
-		downloadRelease: (assetId: number, type: YuzuType, directory: string) =>
-			ipcRenderer.invoke('download-release', assetId, type, directory),
+		downloadRelease: (assetId: number, type: YuzuType, directory: string, versionTag: string) =>
+			ipcRenderer.invoke('download-release', assetId, type, directory, versionTag),
 		downloadEvents: {
 			onStart: (callback: (_: IpcRendererEvent, id: number) => unknown) =>
 				ipcRenderer.on('release-download/start', callback),

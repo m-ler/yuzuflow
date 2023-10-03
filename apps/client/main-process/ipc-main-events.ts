@@ -29,8 +29,8 @@ ipcMain.handle('dialog/select-directory', () => {
 	return selectedDirectory
 })
 
-ipcMain.handle('download-release', (_, assetId: number, type: YuzuType, directory: string) => {
-	new releaseDownloader(directory, assetId, type)
+ipcMain.handle('download-release', (_, assetId: number, type: YuzuType, directory: string, versionTag: string) => {
+	new releaseDownloader(directory, assetId, type, versionTag)
 })
 
 ipcMain.handle('get-node-variables', () => {

@@ -6,23 +6,25 @@ import fs from 'fs'
 import Seven from 'node-7z'
 import decompress from 'decompress'
 import { get7ZipBinaryPath } from './7zip'
+import fse from 'fs-extra'
+import fsExtra from 'fs-extra/esm'
 
 class ReleaseDownloader {
 	private directory = ''
 	private id: number | null = 0
 	private type: YuzuType | null = null
+	private versionTag = ''
 
-	constructor(directory: string, id: number, type: YuzuType) {
+	constructor(directory: string, id: number, type: YuzuType, versionTag: string) {
 		this.directory = directory
 		this.id = id
 		this.type = type
+		this.versionTag = versionTag
 		this.startDownload()
 	}
 
 	private startDownload = () => {
 		appWindows.main?.webContents.send('release-download/start', this.id)
-
-		console.log(this.directory)
 		if (!this.validateDirectory()) return
 
 		this.download()
@@ -30,8 +32,6 @@ class ReleaseDownloader {
 
 	private validateDirectory = () => {
 		const directoryExists = fs.existsSync(this.directory || '')
-		console.log('DIRECTORY EXISTS:')
-		console.log(directoryExists)
 		if (!directoryExists) this.sendDownloadError('The download directory does not exist.')
 
 		return directoryExists
@@ -52,14 +52,13 @@ class ReleaseDownloader {
 			})
 			.then((res) => {
 				const fileExtension = this.getStreamFileExtension(res)
-				console.log(fileExtension)
 				const invalidExtension = fileExtension !== '.7z' && fileExtension !== '.zip'
 				if (invalidExtension) {
 					this.sendDownloadError('Invalid release files.')
 					return
 				}
 
-				const filePath = `${this.directory}/${this.id}${fileExtension}`
+				const filePath = `${this.directory}/${this.versionTag}${fileExtension}`
 				res.data.pipe(fs.createWriteStream(filePath))
 				res.data.on('end', () => {
 					this.extractFiles(filePath, fileExtension)
@@ -80,8 +79,6 @@ class ReleaseDownloader {
 
 	private getStreamFileExtension = (res: AxiosResponse) => {
 		const contentDisposition = res.headers['content-disposition']
-		console.log(contentDisposition)
-
 		const matches = /filename=([^"]+)/.exec(contentDisposition)
 		if (matches && matches.length > 1) {
 			const fileExtension = path.extname(matches[1])
@@ -91,29 +88,59 @@ class ReleaseDownloader {
 	}
 
 	private extractFiles = (filePath: string, extension: '.zip' | '.7z') => {
-		const extractionPath = `${this.directory}/${this.id}`
+		const extractionDir = path.join(this.directory, `${this.versionTag}temp`)
+		const onSuccess = () => {
+			this.organizeExtractionContents(extractionDir, filePath)
+			appWindows.main?.webContents.send('release-download/completed', this.id)
+		}
+
+		const onError = () => this.sendDownloadError('Files extraction failed.')
 
 		if (extension === '.zip') {
-			decompress(filePath, extractionPath)
-				.then(() => {
-					appWindows.main?.webContents.send('release-download/completed', this.id)
-				})
-				.catch(() => {
-					this.sendDownloadError('Files extraction failed.')
-				})
+			decompress(filePath, extractionDir).then(onSuccess).catch(onError)
 			return
 		}
 		//7z
-		const stream = Seven.extractFull(filePath, extractionPath, {
+		const stream = Seven.extractFull(filePath, extractionDir, {
 			$bin: get7ZipBinaryPath(),
 		})
-		stream.on('end', () => {
-			appWindows.main?.webContents.send('release-download/completed', this.id)
-		})
-		stream.on('error', (error) => {
-			console.error(error)
-			this.sendDownloadError('Files extraction failed.')
-		})
+		stream.on('end', onSuccess)
+		stream.on('error', onError)
+	}
+
+	private organizeExtractionContents = (extractionDir: string, assetPath: string) => {
+		fse.removeSync(assetPath)
+		const yuzuDirectory = this.getYuzuExeDirectory(extractionDir)
+		const destinationDir = path.join(this.directory, this.versionTag)
+		if (!yuzuDirectory) {
+			//remove "temp" from the extracted folder name
+			fsExtra.moveSync(extractionDir, destinationDir)
+			this.addVersionFileIntoYuzuFolder(destinationDir)
+			return
+		}
+
+		fsExtra.moveSync(yuzuDirectory, destinationDir, { overwrite: true })
+		if (yuzuDirectory !== extractionDir) fse.removeSync(extractionDir)
+		this.addVersionFileIntoYuzuFolder(destinationDir)
+	}
+
+	private getYuzuExeDirectory = (directory: string) => {
+		const hasYuzuExe = fs.existsSync(path.join(directory, 'yuzu.exe'))
+		if (hasYuzuExe) return directory
+
+		const subdirectories = fs.readdirSync(directory)
+		for (const sub of subdirectories) {
+			const subPath = path.join(directory, sub)
+			if (this.getYuzuExeDirectory(subPath)) return subPath
+		}
+
+		return null
+	}
+
+	private addVersionFileIntoYuzuFolder = (directory: string) => {
+		const fileName = 'version'
+		const versionPath = path.join(directory, fileName)
+		fs.writeFileSync(versionPath, this.versionTag)
 	}
 }
 
