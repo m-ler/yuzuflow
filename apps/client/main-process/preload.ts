@@ -36,6 +36,12 @@ export const api = {
 			removeOnRemove: () => ipcRenderer.removeAllListeners('release-download/remove'),
 		},
 	},
+	node: {
+		getNodeVariables: async () => {
+			const response = ipcRenderer.invoke('get-node-variables')
+			console.log(response)
+		},
+	},
 }
 
 Object.keys(api).forEach((key) => {

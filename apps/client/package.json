@@ -6,6 +6,11 @@
 				"portable"
 			]
 		},
+		"files": [
+			"**/*",
+			"!node_modules/**/*",
+			"node_modules/7zip-bin/win/**/*"
+		],
 		"portable": {
 			"artifactName": "Yuzuflow.exe"
 		}

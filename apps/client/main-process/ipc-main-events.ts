@@ -1,6 +1,6 @@
 import { BrowserWindow, app, dialog, ipcMain } from 'electron'
 import { YuzuType } from 'shared'
-import releaseDownloader from './release-downloader'
+import releaseDownloader from './lib/release-downloader'
 
 ipcMain.on('window/quit', () => {
 	app.quit()
@@ -31,4 +31,8 @@ ipcMain.handle('dialog/select-directory', () => {
 
 ipcMain.handle('download-release', (_, assetId: number, type: YuzuType, directory: string) => {
 	new releaseDownloader(directory, assetId, type)
+})
+
+ipcMain.handle('get-node-variables', () => {
+	return { cwd: process.cwd(), dirname: __dirname, isDev: import.meta.env.DEV }
 })

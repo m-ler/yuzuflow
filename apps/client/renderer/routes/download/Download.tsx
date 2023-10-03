@@ -9,6 +9,7 @@ import useStorageState from '@/renderer/hooks/useStorageState'
 import { IpcRendererEvent } from 'electron'
 import { downloadsState } from '@/renderer/store/downloads'
 import toast from 'react-hot-toast'
+import bgGradient from '@/public/app/img/background-gradient.png?asset'
 
 const Download = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
@@ -48,7 +49,7 @@ const Download = () => {
 				className={`fixed inset-0 bg-cover pointer-events-none ${
 					selectedTab === 'ea' ? 'hue-rotate-[70deg] opacity-40' : 'opacity-30'
 				} duration-500`}
-				style={{ backgroundImage: 'url(/app/img/background-gradient.png)' }}
+				style={{ backgroundImage: `url(${bgGradient})` }}
 			></div>
 			<section className="w-full h-full max-h-full p-4  overflow-auto">
 				<div className="flex flex-col gap-4 mx-auto w-full h-full max-w-screen-lg">

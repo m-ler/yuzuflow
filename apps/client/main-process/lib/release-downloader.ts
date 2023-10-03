@@ -1,11 +1,11 @@
 import path from 'node:path'
 import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuType } from 'shared'
-import appWindows from './app-windows'
+import appWindows from '../app-windows'
 import axios, { AxiosResponse } from 'axios'
 import fs from 'fs'
 import Seven from 'node-7z'
-import sevenBin from '7zip-bin'
 import decompress from 'decompress'
+import { get7ZipBinaryPath } from './7zip'
 
 class ReleaseDownloader {
 	private directory = ''
@@ -105,8 +105,7 @@ class ReleaseDownloader {
 		}
 		//7z
 		const stream = Seven.extractFull(filePath, extractionPath, {
-			//$bin: path.join(process.cwd(), 'node_modules/7zip-bin/win/x64/7za.exe'),
-			$bin: sevenBin.path7za,
+			$bin: get7ZipBinaryPath(),
 		})
 		stream.on('end', () => {
 			appWindows.main?.webContents.send('release-download/completed', this.id)
