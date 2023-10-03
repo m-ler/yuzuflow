@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuType } from 'shared'
+import { YUZU_EA_REPO_URL, YUZU_MAINLINE_REPO_URL, YuzuVersion } from 'shared'
 import appWindows from '../app-windows'
 import axios, { AxiosResponse } from 'axios'
 import fs from 'fs'
@@ -11,20 +11,18 @@ import fsExtra from 'fs-extra/esm'
 
 class ReleaseDownloader {
 	private directory = ''
-	private id: number | null = 0
-	private type: YuzuType | null = null
-	private versionTag = ''
+	private yuzuObj
 
-	constructor(directory: string, id: number, type: YuzuType, versionTag: string) {
+	constructor(directory: string, yuzuObj: YuzuVersion) {
 		this.directory = directory
-		this.id = id
-		this.type = type
-		this.versionTag = versionTag
+		this.yuzuObj = yuzuObj
 		this.startDownload()
 	}
 
 	private startDownload = () => {
-		appWindows.main?.webContents.send('release-download/start', this.id)
+		console.log(this.yuzuObj)
+
+		appWindows.main?.webContents.send('release-download/start', this.yuzuObj.assetId)
 		if (!this.validateDirectory()) return
 
 		this.download()
@@ -38,16 +36,16 @@ class ReleaseDownloader {
 	}
 
 	private download = () => {
-		const repoUrl = this.type === 'ea' ? YUZU_EA_REPO_URL : YUZU_MAINLINE_REPO_URL
+		const repoUrl = this.yuzuObj.type === 'ea' ? YUZU_EA_REPO_URL : YUZU_MAINLINE_REPO_URL
 
 		axios
-			.get(`https://api.github.com/${repoUrl}/assets/${this.id}`, {
+			.get(`https://api.github.com/${repoUrl}/assets/${this.yuzuObj.assetId}`, {
 				headers: {
 					Accept: 'application/octet-stream',
 				},
 				responseType: 'stream',
 				onDownloadProgress: (e) => {
-					if (e.progress) appWindows.main?.webContents.send('release-download/update', this.id, e.progress)
+					if (e.progress) appWindows.main?.webContents.send('release-download/update', this.yuzuObj.assetId, e.progress)
 				},
 			})
 			.then((res) => {
@@ -58,7 +56,7 @@ class ReleaseDownloader {
 					return
 				}
 
-				const filePath = `${this.directory}/${this.versionTag}${fileExtension}`
+				const filePath = `${this.directory}/${this.yuzuObj.versionTag}${fileExtension}`
 				res.data.pipe(fs.createWriteStream(filePath))
 				res.data.on('end', () => {
 					this.extractFiles(filePath, fileExtension)
@@ -74,7 +72,7 @@ class ReleaseDownloader {
 	}
 
 	private sendDownloadError = (message: string) => {
-		appWindows.main?.webContents.send('release-download/error', this.id || 0, message)
+		appWindows.main?.webContents.send('release-download/error', this.yuzuObj.assetId || 0, message)
 	}
 
 	private getStreamFileExtension = (res: AxiosResponse) => {
@@ -88,10 +86,10 @@ class ReleaseDownloader {
 	}
 
 	private extractFiles = (filePath: string, extension: '.zip' | '.7z') => {
-		const extractionDir = path.join(this.directory, `${this.versionTag}temp`)
+		const extractionDir = path.join(this.directory, `${this.yuzuObj.versionTag}temp`)
 		const onSuccess = () => {
 			this.organizeExtractionContents(extractionDir, filePath)
-			appWindows.main?.webContents.send('release-download/completed', this.id)
+			appWindows.main?.webContents.send('release-download/completed', this.yuzuObj.assetId)
 		}
 
 		const onError = () => this.sendDownloadError('Files extraction failed.')
@@ -111,7 +109,7 @@ class ReleaseDownloader {
 	private organizeExtractionContents = (extractionDir: string, assetPath: string) => {
 		fse.removeSync(assetPath)
 		const yuzuDirectory = this.getYuzuExeDirectory(extractionDir)
-		const destinationDir = path.join(this.directory, this.versionTag)
+		const destinationDir = path.join(this.directory, this.yuzuObj.versionTag)
 		if (!yuzuDirectory) {
 			//remove "temp" from the extracted folder name
 			fsExtra.moveSync(extractionDir, destinationDir)
@@ -139,8 +137,9 @@ class ReleaseDownloader {
 
 	private addVersionFileIntoYuzuFolder = (directory: string) => {
 		const fileName = 'version'
+		const fileContent = JSON.stringify(this.yuzuObj)
 		const versionPath = path.join(directory, fileName)
-		fs.writeFileSync(versionPath, this.versionTag)
+		fs.writeFileSync(versionPath, fileContent, 'utf-8')
 	}
 }
 

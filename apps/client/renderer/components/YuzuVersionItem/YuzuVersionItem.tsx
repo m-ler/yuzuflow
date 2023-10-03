@@ -40,7 +40,7 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 	}
 
 	const startDownload = (directory: string) => {
-		window.yuzu.downloadRelease(data.assetId!, data.type, directory, data.versionTag)
+		window.yuzu.downloadRelease(directory, data)
 	}
 
 	const downloading = Boolean(currentDownload && !currentDownload.completed)

@@ -1,5 +1,5 @@
 import { BrowserWindow, app, dialog, ipcMain } from 'electron'
-import { YuzuType } from 'shared'
+import { YuzuVersion } from 'shared'
 import releaseDownloader from './lib/release-downloader'
 
 ipcMain.on('window/quit', () => {
@@ -29,8 +29,8 @@ ipcMain.handle('dialog/select-directory', () => {
 	return selectedDirectory
 })
 
-ipcMain.handle('download-release', (_, assetId: number, type: YuzuType, directory: string, versionTag: string) => {
-	new releaseDownloader(directory, assetId, type, versionTag)
+ipcMain.handle('download-release', (_, directory: string, yuzuObj: YuzuVersion) => {
+	new releaseDownloader(directory, yuzuObj)
 })
 
 ipcMain.handle('get-node-variables', () => {
