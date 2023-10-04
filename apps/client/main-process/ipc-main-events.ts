@@ -1,6 +1,11 @@
 import { BrowserWindow, app, dialog, ipcMain } from 'electron'
 import { YuzuVersion } from 'shared'
 import releaseDownloader from './lib/release-downloader'
+import VersionsDetector from './lib/versions-detector'
+import { exec } from 'child_process'
+import Store from 'electron-store'
+
+const store = new Store()
 
 ipcMain.on('window/quit', () => {
 	app.quit()
@@ -29,10 +34,31 @@ ipcMain.handle('dialog/select-directory', () => {
 	return selectedDirectory
 })
 
-ipcMain.handle('download-release', (_, directory: string, yuzuObj: YuzuVersion) => {
-	new releaseDownloader(directory, yuzuObj)
+ipcMain.on('dialog/open-directory', (_, directory: string) => {
+	exec(`explorer "${directory}"`)
+})
+
+ipcMain.handle('download-release', (_, yuzuObj: YuzuVersion) => {
+	new releaseDownloader(yuzuObj)
+})
+
+ipcMain.on('detect-installed-versions', () => {
+	const versionsDetector = new VersionsDetector()
+	versionsDetector.updateInstalledVersions()
 })
 
 ipcMain.handle('get-node-variables', () => {
 	return { cwd: process.cwd(), dirname: __dirname, isDev: import.meta.env.DEV }
+})
+
+ipcMain.on('electron-store/get', async (event, val) => {
+	event.returnValue = store.get(val)
+})
+
+ipcMain.on('electron-store/set', async (_, key, val) => {
+	store.set(key, val)
+})
+
+ipcMain.on('electron-store/clear', async () => {
+	store.clear()
 })

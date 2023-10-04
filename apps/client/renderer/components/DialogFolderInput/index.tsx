@@ -1,6 +1,6 @@
 import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
 import { YuzuType } from 'shared'
-import DownloadFolderInput from '../DownloadFolderInput/DownloadFolderInput'
+import DownloadFolderInput from '../DownloadFolderInput'
 import { useState } from 'react'
 
 type Props = {

@@ -1,7 +1,7 @@
 import { Input } from '@nextui-org/react'
 import { FolderOpen } from 'lucide-react'
 import { YuzuType } from 'shared'
-import useStorageState from '@/renderer/hooks/useStorageState'
+import { useState } from 'react'
 
 type Props = {
 	type: YuzuType
@@ -9,14 +9,16 @@ type Props = {
 }
 
 const DownloadFolderInput = ({ type, onChange }: Props) => {
-	const [directory, setDirectory] = useStorageState(`${type}-download-directory`, '')
+	const [directory, setDirectory] = useState<string>(window.store.get(`${type}-download-directory`) || '')
 
 	const onClick = async () => {
 		const response = await window.fileExplorer.selectDirectory()
 		const newValue = response?.[0]
 		if (newValue) {
 			setDirectory(newValue)
+			window.store.set(`${type}-download-directory`, newValue)
 			onChange?.(newValue)
+			window.yuzu.detectInstalledVersions()
 		}
 	}
 

@@ -1,5 +1,6 @@
 import { ipcRenderer, contextBridge, IpcRendererEvent } from 'electron'
 import { YuzuVersion } from 'shared'
+import { InstalledVersions } from './types'
 
 export const api = {
 	appWindow: {
@@ -10,10 +11,10 @@ export const api = {
 	},
 	fileExplorer: {
 		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('dialog/select-directory'),
+		openDirectory: (directory: string) => ipcRenderer.send('dialog/open-directory', directory),
 	},
 	yuzu: {
-		downloadRelease: (directory: string, yuzuObj: YuzuVersion) =>
-			ipcRenderer.invoke('download-release', directory, yuzuObj),
+		downloadRelease: (yuzuObj: YuzuVersion) => ipcRenderer.invoke('download-release', yuzuObj),
 		downloadEvents: {
 			onStart: (callback: (_: IpcRendererEvent, id: number) => unknown) =>
 				ipcRenderer.on('release-download/start', callback),
@@ -34,6 +35,24 @@ export const api = {
 			onRemove: (callback: (_: IpcRendererEvent, id: number) => unknown) =>
 				ipcRenderer.on('release-download/remove', callback),
 			removeOnRemove: () => ipcRenderer.removeAllListeners('release-download/remove'),
+		},
+		detectInstalledVersions: () => ipcRenderer.send('detect-installed-versions'),
+		onInstalledVersionsUpdate: (callback: (_: IpcRendererEvent, versions: InstalledVersions) => unknown) => {
+			ipcRenderer.on('installed-versions/update', callback)
+		},
+		removeOnInstalledVersionsUpdate: () => {
+			ipcRenderer.removeAllListeners('installed-versions/update')
+		},
+	},
+	store: {
+		get: (key: string) => {
+			return ipcRenderer.sendSync('electron-store/get', key)
+		},
+		set: (key: string, val: unknown) => {
+			ipcRenderer.send('electron-store/set', key, val)
+		},
+		clear: () => {
+			ipcRenderer.send('electron-store/clear')
 		},
 	},
 	node: {

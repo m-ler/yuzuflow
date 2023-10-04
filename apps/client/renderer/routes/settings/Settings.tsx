@@ -1,4 +1,4 @@
-import DownloadFolderInput from '@/renderer/components/DownloadFolderInput/DownloadFolderInput'
+import DownloadFolderInput from '@/renderer/components/DownloadFolderInput'
 import PageTransition from '@/renderer/components/Transitions/PageTransition'
 
 const Settings = () => {

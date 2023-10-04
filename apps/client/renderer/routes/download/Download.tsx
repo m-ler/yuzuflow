@@ -1,5 +1,5 @@
 import PageTransition from '@/renderer/components/Transitions/PageTransition'
-import VersionsTable from '@/renderer/components/VersionsTable/VersionsTable'
+import VersionsTable from '@/renderer/components/VersionsTable'
 import useYuzuVersionsRequest from '@/renderer/hooks/useYuzuVersionsRequest'
 import { Tabs, Tab } from '@nextui-org/react'
 import { useEffect, useState } from 'react'

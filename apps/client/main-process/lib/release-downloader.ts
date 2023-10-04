@@ -8,20 +8,22 @@ import decompress from 'decompress'
 import { get7ZipBinaryPath } from './7zip'
 import fse from 'fs-extra'
 import fsExtra from 'fs-extra/esm'
+import { ipcMain } from 'electron'
+import Store from 'electron-store'
+
+const store = new Store()
 
 class ReleaseDownloader {
 	private directory = ''
 	private yuzuObj
 
-	constructor(directory: string, yuzuObj: YuzuVersion) {
-		this.directory = directory
+	constructor(yuzuObj: YuzuVersion) {
+		this.directory = (store.get(`${yuzuObj.type}-download-directory`) as string) || ''
 		this.yuzuObj = yuzuObj
 		this.startDownload()
 	}
 
 	private startDownload = () => {
-		console.log(this.yuzuObj)
-
 		appWindows.main?.webContents.send('release-download/start', this.yuzuObj.assetId)
 		if (!this.validateDirectory()) return
 
@@ -90,6 +92,7 @@ class ReleaseDownloader {
 		const onSuccess = () => {
 			this.organizeExtractionContents(extractionDir, filePath)
 			appWindows.main?.webContents.send('release-download/completed', this.yuzuObj.assetId)
+			ipcMain.emit('detect-installed-versions')
 		}
 
 		const onError = () => this.sendDownloadError('Files extraction failed.')

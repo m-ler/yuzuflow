@@ -1,11 +1,12 @@
-import { Button, Progress, Spinner } from '@nextui-org/react'
+import { Progress } from '@nextui-org/react'
 import { YuzuType, YuzuVersion } from 'shared'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Download } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { downloadsState } from '@/renderer/store/downloads'
-import DialogFolderInput from '../DialogFolderInput/DialogFolderInput'
-import toast from 'react-hot-toast'
+import { installedVersionTagsState } from '@/renderer/store/installed-version-tags'
+import DownloadButton from './DownloadButton'
+import { Check } from 'lucide-react'
+import OpenFolderButton from './OpenFolderButton'
 
 type Props = {
 	data: YuzuVersion
@@ -13,38 +14,17 @@ type Props = {
 }
 
 const YuzuVersionItem = ({ data, type }: Props) => {
-	const { currentDownloads, removeDownload } = downloadsState()
+	const { currentDownloads } = downloadsState()
+	const installedVersions = installedVersionTagsState()[type]
 	const currentDownload = data.assetId ? currentDownloads[data.assetId] : null
-	const [showDownloadFolderDialog, setShowDownloadFolderDialog] = useState(false)
+	const installed = useMemo(() => installedVersions.includes(data.versionTag), [installedVersions])
 
 	const date = useMemo(() => {
 		const dateTime = new Date(data.date)
 		return `${dateTime.toLocaleDateString()} - ${dateTime.toLocaleTimeString()}`
 	}, [data.date])
 
-	const downloadOnClick = async () => {
-		const directory = JSON.parse(localStorage.getItem(`${type}-download-directory`) || 'null')
-		if (!data.assetId) {
-			toast.error('It seems that the files for this release are not available.')
-			return
-		}
-
-		removeDownload(data.assetId)
-
-		if (!directory) {
-			setShowDownloadFolderDialog(true)
-			return
-		}
-
-		startDownload(directory)
-	}
-
-	const startDownload = (directory: string) => {
-		window.yuzu.downloadRelease(directory, data)
-	}
-
 	const downloading = Boolean(currentDownload && !currentDownload.completed)
-	const blockDownloadButton = downloading && !currentDownload?.error
 
 	return (
 		<>
@@ -56,39 +36,18 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 			>
 				<div className="flex justify-between items-center px-3 py-2 ">
 					<div>
-						<span className="text-zinc-400 text-sm block">{data.name}</span>
+						<span className="text-zinc-400 text-sm block flex items-center gap-1">
+							{data.name}
+							{installed && <Check size={14} className="text-green-500" />}
+						</span>
 						<span className="text-zinc-500 text-xs ">{date}</span>
 					</div>
 					<div>
-						<motion.div whileHover="hover">
-							<Button
-								isIconOnly
-								size="sm"
-								className={`bg-zinc-950/50 hover:bg-cyan-700 ${blockDownloadButton ? 'pointer-events-none' : ''}`}
-								onClick={downloadOnClick}
-								disabled={blockDownloadButton}
-							>
-								{blockDownloadButton ? (
-									<Spinner size="sm" />
-								) : (
-									<motion.div
-										animate={{ y: '0%' }}
-										variants={{
-											hover: {
-												y: ['-25%', '0%'],
-												transition: {
-													repeatType: 'mirror',
-													repeat: Infinity,
-													duration: 0.3,
-												},
-											},
-										}}
-									>
-										<Download size={14} className="text-zinc-300" />
-									</motion.div>
-								)}
-							</Button>
-						</motion.div>
+						{installed ? (
+							<OpenFolderButton type={type} versionTag={data.versionTag} />
+						) : (
+							<DownloadButton data={data} type={type} />
+						)}
 					</div>
 				</div>
 				<AnimatePresence>
@@ -105,14 +64,6 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 					)}
 				</AnimatePresence>
 			</motion.div>
-			<DialogFolderInput
-				open={showDownloadFolderDialog}
-				onClose={(directory) => {
-					setShowDownloadFolderDialog(false)
-					if (directory) startDownload(directory)
-				}}
-				type={type}
-			/>
 		</>
 	)
 }
