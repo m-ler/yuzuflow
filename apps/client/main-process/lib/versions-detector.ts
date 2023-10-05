@@ -35,6 +35,7 @@ export default class VersionsDetector {
 			}
 		}
 
+		versions.sort((a, b) => b.createdTime - a.createdTime)
 		return versions
 	}
 

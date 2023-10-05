@@ -1,5 +1,5 @@
 import { Progress } from '@nextui-org/react'
-import { YuzuType, YuzuVersion } from 'shared'
+import { YuzuVersion } from 'shared'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
 import { downloadsState } from '@/renderer/store/downloads'
@@ -11,12 +11,11 @@ import PlayButton from './PlayButton'
 
 type Props = {
 	data: YuzuVersion
-	type: YuzuType
 }
 
-const YuzuVersionItem = ({ data, type }: Props) => {
+const YuzuVersionItem = ({ data }: Props) => {
 	const { currentDownloads } = downloadsState()
-	const installedVersions = installedVersionTagsState()[type]
+	const installedVersions = installedVersionTagsState()[data.type]
 	const currentDownload = data.assetId ? currentDownloads[data.assetId] : null
 	const installed = useMemo(() => installedVersions.includes(data.versionTag), [installedVersions])
 
@@ -50,7 +49,7 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 								<PlayButton data={data} />
 							</div>
 						) : (
-							<DownloadButton data={data} type={type} />
+							<DownloadButton data={data} type={data.type} />
 						)}
 					</div>
 				</div>

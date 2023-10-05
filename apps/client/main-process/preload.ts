@@ -16,6 +16,7 @@ export const api = {
 		openFile: (directory: string) => {
 			ipcRenderer.send('file-explorer/open-file', directory)
 		},
+		deleteDirectory: (directory: string): boolean => ipcRenderer.sendSync('file-explorer/delete-directory', directory),
 	},
 	yuzu: {
 		downloadRelease: (yuzuObj: YuzuVersion) => ipcRenderer.invoke('download-release', yuzuObj),

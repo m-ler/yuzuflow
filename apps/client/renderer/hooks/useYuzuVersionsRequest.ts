@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { VersionsRequest, YuzuType } from 'shared'
-import { API_BASE_URL } from '@/renderer/config/constants'
+import { API_BASE_URL, TABLE_PAGINATION_SIZE } from '@/renderer/config/constants'
 import axios from 'axios'
 
 type Params = {
@@ -24,9 +24,9 @@ export default ({ type, page }: Params) => {
 
 	const query = useQuery({
 		queryKey: [type, page],
-		queryFn: () => request(page, 8),
+		queryFn: () => request(page, TABLE_PAGINATION_SIZE),
 		staleTime: 1000 * 30,
-		keepPreviousData: true, 
+		keepPreviousData: true,
 		retry: false,
 		refetchOnWindowFocus: false,
 	})

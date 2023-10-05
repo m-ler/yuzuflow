@@ -5,6 +5,7 @@ import VersionsDetector from './lib/versions-detector'
 import { exec } from 'child_process'
 import Store from 'electron-store'
 import fs from 'node:fs'
+import fse from 'fs-extra'
 
 const store = new Store()
 
@@ -47,6 +48,17 @@ ipcMain.on('file-explorer/open-file', (_, directory: string) => {
 	exec(directory, (error) => {
 		console.error(error)
 	})
+})
+
+ipcMain.on('file-explorer/delete-directory', (event, directory: string) => {
+	let error = false
+
+	try {
+		fse.removeSync(directory)
+	} catch (e) {
+		error = true
+	}
+	event.returnValue = error
 })
 
 ipcMain.handle('download-release', (_, yuzuObj: YuzuVersion) => {

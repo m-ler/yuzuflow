@@ -10,6 +10,7 @@ import fse from 'fs-extra'
 import fsExtra from 'fs-extra/esm'
 import { ipcMain } from 'electron'
 import Store from 'electron-store'
+import { InstalledVersion } from '../types'
 
 const store = new Store()
 
@@ -140,7 +141,8 @@ class ReleaseDownloader {
 
 	private addVersionFileIntoYuzuFolder = (directory: string) => {
 		const fileName = 'version'
-		const fileContent = JSON.stringify(this.yuzuObj)
+		const data: InstalledVersion = { ...this.yuzuObj, createdTime: Date.now(), directory }
+		const fileContent = JSON.stringify(data)
 		const versionPath = path.join(directory, fileName)
 		fs.writeFileSync(versionPath, fileContent, 'utf-8')
 	}

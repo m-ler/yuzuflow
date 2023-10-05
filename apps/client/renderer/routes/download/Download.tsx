@@ -7,7 +7,6 @@ import { YuzuType } from 'shared'
 import RequestErrorState from './components/RequestErrorState'
 import useStorageState from '@/renderer/hooks/useStorageState'
 import bgGradient from '@/public/app/img/background-gradient.png?asset'
-import DownloadsStateManager from './components/DownloadsStateManager'
 
 const Download = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('downloads-tab', 'mainline')
@@ -17,7 +16,6 @@ const Download = () => {
 
 	return (
 		<PageTransition>
-			<DownloadsStateManager />
 			<div
 				className={`fixed inset-0 bg-cover pointer-events-none ${
 					selectedTab === 'ea' ? 'hue-rotate-[70deg] opacity-40' : 'opacity-30'
@@ -42,12 +40,12 @@ const Download = () => {
 						<RequestErrorState />
 					) : (
 						<VersionsTable
-							type={selectedTab}
 							loading={request.isFetching}
 							page={page}
 							pageCount={request.data?.pageCount || 0}
 							onPageChange={(page) => setPage(page)}
 							data={request.data?.data || []}
+							itemType="download"
 						/>
 					)}
 				</div>
