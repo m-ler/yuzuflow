@@ -7,6 +7,7 @@ import useStorageState from '@/renderer/hooks/useStorageState'
 import bgGradient from '@/public/app/img/background-gradient.png?asset'
 import { installedVersionsState } from '@/renderer/store/installed-versions'
 import { TABLE_PAGINATION_SIZE } from '@/renderer/config/constants'
+import EmptyState from './components/EmptyState'
 
 const Installed = () => {
 	const [selectedTab, setSelectedTab] = useStorageState<React.Key>('installed-tab', 'mainline')
@@ -41,14 +42,18 @@ const Installed = () => {
 						<Tab key="ea" title="Early Access"></Tab>
 					</Tabs>
 
-					<VersionsTable
-						loading={false}
-						page={page}
-						pageCount={Math.ceil(installedVersions.length / TABLE_PAGINATION_SIZE)}
-						onPageChange={(page) => setPage(page)}
-						data={pageData || []}
-						itemType="install"
-					/>
+					{installedVersions.length === 0 ? (
+						<EmptyState key={selectedTab}/>
+					) : (
+						<VersionsTable
+							loading={false}
+							page={page}
+							pageCount={Math.ceil(installedVersions.length / TABLE_PAGINATION_SIZE)}
+							onPageChange={(page) => setPage(page)}
+							data={pageData || []}
+							itemType="install"
+						/>
+					)}
 				</div>
 			</section>
 		</PageTransition>
