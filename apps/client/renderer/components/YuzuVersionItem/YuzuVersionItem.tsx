@@ -7,6 +7,7 @@ import { installedVersionTagsState } from '@/renderer/store/installed-version-ta
 import DownloadButton from './DownloadButton'
 import { Check } from 'lucide-react'
 import OpenFolderButton from './OpenFolderButton'
+import PlayButton from './PlayButton'
 
 type Props = {
 	data: YuzuVersion
@@ -44,7 +45,10 @@ const YuzuVersionItem = ({ data, type }: Props) => {
 					</div>
 					<div>
 						{installed ? (
-							<OpenFolderButton type={type} versionTag={data.versionTag} />
+							<div className="flex items-center gap-2">
+								<OpenFolderButton data={data} />
+								<PlayButton data={data} />
+							</div>
 						) : (
 							<DownloadButton data={data} type={type} />
 						)}

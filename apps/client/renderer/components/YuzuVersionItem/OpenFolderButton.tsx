@@ -1,17 +1,14 @@
-import { installedVersionsState } from '@/renderer/store/installed-versions'
 import { Button } from '@nextui-org/react'
 import { FolderOpen } from 'lucide-react'
-import { useMemo } from 'react'
-import { YuzuType } from 'shared'
+import { YuzuVersion } from 'shared'
+import useInstalledVersionData from './hooks/useInstalledVersionData'
 
 type Props = {
-	type: YuzuType
-	versionTag: string
+	data: YuzuVersion
 }
 
-const OpenFolderButton = ({ type, versionTag }: Props) => {
-	const installedVersions = installedVersionsState()[type]
-	const versionData = useMemo(() => installedVersions.find((x) => x.versionTag === versionTag), [installedVersions])
+const OpenFolderButton = ({ data }: Props) => {
+	const versionData = useInstalledVersionData(data)
 
 	const onClick = () => {
 		if (versionData?.directory) window.fileExplorer.openDirectory(versionData.directory)

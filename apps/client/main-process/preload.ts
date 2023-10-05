@@ -10,8 +10,12 @@ export const api = {
 		quit: () => ipcRenderer.send('window/quit'),
 	},
 	fileExplorer: {
-		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('dialog/select-directory'),
-		openDirectory: (directory: string) => ipcRenderer.send('dialog/open-directory', directory),
+		fileExists: (directory: string): boolean => ipcRenderer.sendSync('file-explorer/file-exists', directory),
+		selectDirectory: (): Promise<string[] | undefined> => ipcRenderer.invoke('file-explorer/select-directory'),
+		openDirectory: (directory: string) => ipcRenderer.send('file-explorer/open-directory', directory),
+		openFile: (directory: string) => {
+			ipcRenderer.send('file-explorer/open-file', directory)
+		},
 	},
 	yuzu: {
 		downloadRelease: (yuzuObj: YuzuVersion) => ipcRenderer.invoke('download-release', yuzuObj),

@@ -4,6 +4,7 @@ import releaseDownloader from './lib/release-downloader'
 import VersionsDetector from './lib/versions-detector'
 import { exec } from 'child_process'
 import Store from 'electron-store'
+import fs from 'node:fs'
 
 const store = new Store()
 
@@ -26,7 +27,11 @@ ipcMain.handle('window/isMaximized', () => {
 	return Boolean(BrowserWindow.getFocusedWindow()?.isMaximized())
 })
 
-ipcMain.handle('dialog/select-directory', () => {
+ipcMain.on('file-explorer/file-exists', (event, directory: string) => {
+	event.returnValue = fs.existsSync(directory)
+})
+
+ipcMain.handle('file-explorer/select-directory', () => {
 	const selectedDirectory = dialog.showOpenDialogSync({
 		properties: ['openDirectory'],
 	})
@@ -34,8 +39,14 @@ ipcMain.handle('dialog/select-directory', () => {
 	return selectedDirectory
 })
 
-ipcMain.on('dialog/open-directory', (_, directory: string) => {
+ipcMain.on('file-explorer/open-directory', (_, directory: string) => {
 	exec(`explorer "${directory}"`)
+})
+
+ipcMain.on('file-explorer/open-file', (_, directory: string) => {
+	exec(directory, (error) => {
+		console.error(error)
+	})
 })
 
 ipcMain.handle('download-release', (_, yuzuObj: YuzuVersion) => {
