@@ -35,11 +35,13 @@ const checkReleaseUpdates = (type: YuzuType) => {
 		.finally(() => {
 			checkingUpdate[type] = false
 		})
-/* 
-	octokit
-		.request('GET /rate_limit')
-		.then((res) => console.log(res.data.rate))
-		.catch((e) => console.error(e)) */
+		
+	if (process.env.NODE_ENV === 'development') {
+		octokit
+			.request('GET /rate_limit')
+			.then((res) => console.log(res.data.rate))
+			.catch((e) => console.error(e))
+	}
 }
 
 export const chechMainlineUpdates = cron.schedule('*/30 * * * * *', () => checkReleaseUpdates('mainline'), {

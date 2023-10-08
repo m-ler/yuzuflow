@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "tsx src/server.ts",
+		"dev": "cross-env NODE_ENV=development tsx src/server.ts",
 		"build": "tsc && tsc-alias",
-		"start": "node dist/apps/api/src/server.js"
+		"start": "cross-env NODE_ENV=production node dist/apps/api/src/server.js"
 	},
 	"dependencies": {
 		"@types/apicache": "^1.6.2",
@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@types/cors": "^2.8.14",
 		"@types/node-cron": "^3.0.8",
+		"cross-env": "^7.0.3",
 		"tsc-alias": "^1.8.8",
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^3.13.0"
