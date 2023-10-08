@@ -10,5 +10,5 @@ const app = express()
 app.use(cors())
 app.use('/versions', versionsRouter)
 
-app.listen(3000)
+app.listen(3000, () => console.log('API running on port 3000'))
 initializeJobs()
