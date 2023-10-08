@@ -1,16 +1,17 @@
-import { DownloadCloud, MonitorDown, Settings } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { DownloadCloud, MonitorDown, Settings } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useMediaQuery } from '@/renderer/hooks/useMediaQuery'
 import { navDrawerState } from '@/renderer/store/nav-drawer'
-import NavButton from './NavButton';
+import NavButton from './NavButton'
+import { version } from '@/package.json'
 
 const NavDrawer = () => {
-	const smallScreen = useMediaQuery('(max-width: 640px)');
-	const { open, setOpen } = navDrawerState();
+	const smallScreen = useMediaQuery('(max-width: 640px)')
+	const { open, setOpen } = navDrawerState()
 	useEffect(() => {
-		setOpen(!smallScreen);
-	}, [smallScreen]);
+		setOpen(!smallScreen)
+	}, [smallScreen])
 
 	const content = useMemo(
 		() => (
@@ -32,11 +33,11 @@ const NavDrawer = () => {
 						</NavButton>
 					</li>
 				</ul>
-				<span className="block mt-auto text-zinc-500 text-center text-xs">YuzuFlow 1.0</span>
+				<span className="block mt-auto text-zinc-600 text-center text-xs">YuzuFlow {version}</span>
 			</nav>
 		),
 		[]
-	);
+	)
 
 	return smallScreen ? (
 		<AnimatePresence>
@@ -63,7 +64,7 @@ const NavDrawer = () => {
 		</AnimatePresence>
 	) : (
 		open && <div className="min-w-[180px] max-w-[180px] grow">{content}</div>
-	);
-};
+	)
+}
 
-export default NavDrawer;
+export default NavDrawer
