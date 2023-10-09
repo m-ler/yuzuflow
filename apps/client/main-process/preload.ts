@@ -1,6 +1,7 @@
 import { ipcRenderer, contextBridge, IpcRendererEvent } from 'electron'
-import { YuzuVersion } from 'shared'
+import { YuzuType, YuzuVersion } from 'shared'
 import { InstalledVersions } from './types'
+import { AxiosResponse } from 'axios'
 
 export const api = {
 	appWindow: {
@@ -19,6 +20,8 @@ export const api = {
 		deleteDirectory: (directory: string): boolean => ipcRenderer.sendSync('file-explorer/delete-directory', directory),
 	},
 	yuzu: {
+		getYuzuReleases: (baseUrl: string, type: YuzuType, pageSize: number, page: number): Promise<AxiosResponse> =>
+			ipcRenderer.invoke('get-yuzu-releases', baseUrl, type, pageSize, page),
 		downloadRelease: (yuzuObj: YuzuVersion) => ipcRenderer.invoke('download-release', yuzuObj),
 		downloadEvents: {
 			onStart: (callback: (_: IpcRendererEvent, id: number) => unknown) =>
@@ -61,10 +64,7 @@ export const api = {
 		},
 	},
 	node: {
-		getNodeVariables: async () => {
-			const response = ipcRenderer.invoke('get-node-variables')
-			console.log(response)
-		},
+		getNodeVariables: () => ipcRenderer.sendSync('get-node-variables'),
 	},
 }
 

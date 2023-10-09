@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { VersionsRequest, YuzuType } from 'shared'
 import { API_BASE_URL, TABLE_PAGINATION_SIZE } from '@/renderer/config/constants'
-import axios from 'axios'
 
 type Params = {
 	type: YuzuType
@@ -10,12 +9,12 @@ type Params = {
 }
 
 const getMainlineVersions = async (page: number, pageSize: number): Promise<VersionsRequest> => {
-	const response = await axios.get(`${API_BASE_URL}/versions/mainline?per_page=${pageSize}&page=${page}`)
+	const response = await window.yuzu.getYuzuReleases(API_BASE_URL, 'mainline', pageSize, page)
 	return response.data
 }
 
 const getEAVersions = async (page: number, pageSize: number): Promise<VersionsRequest> => {
-	const response = await axios.get(`${API_BASE_URL}/versions/ea?per_page=${pageSize}&page=${page}`)
+	const response = await window.yuzu.getYuzuReleases(API_BASE_URL, 'ea', pageSize, page)
 	return response.data
 }
 

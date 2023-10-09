@@ -1,11 +1,13 @@
 import { BrowserWindow, app, dialog, ipcMain } from 'electron'
-import { YuzuVersion } from 'shared'
+import { YuzuType, YuzuVersion } from 'shared'
 import releaseDownloader from './lib/release-downloader'
 import VersionsDetector from './lib/versions-detector'
 import { exec } from 'child_process'
 import Store from 'electron-store'
 import fs from 'node:fs'
 import fse from 'fs-extra'
+import https from 'https'
+import axios from 'axios'
 
 const store = new Store()
 
@@ -70,8 +72,14 @@ ipcMain.on('detect-installed-versions', () => {
 	versionsDetector.updateInstalledVersions()
 })
 
-ipcMain.handle('get-node-variables', () => {
-	return { cwd: process.cwd(), dirname: __dirname, isDev: import.meta.env.DEV }
+ipcMain.on('get-node-variables', (e) => {
+	e.returnValue = { cwd: process.cwd(), dirname: __dirname, isDev: import.meta.env.DEV }
+})
+
+ipcMain.on('get-http-agent-no-ssl', (e) => {
+	e.returnValue = new https.Agent({
+		rejectUnauthorized: false,
+	})
 })
 
 ipcMain.on('electron-store/get', async (event, val) => {
@@ -84,4 +92,12 @@ ipcMain.on('electron-store/set', async (_, key, val) => {
 
 ipcMain.on('electron-store/clear', async () => {
 	store.clear()
+})
+
+ipcMain.handle('get-yuzu-releases', async (_, baseUrl: string, type: YuzuType, pageSize: number, page: number) => {
+	const httpsAgent = new https.Agent({
+		rejectUnauthorized: false,
+	})	
+	const res = await axios.get(`${baseUrl}/versions/${type}?per_page=${pageSize}&page=${page}`, { httpsAgent })
+	return { data: res.data, status: res.status, statusText: res.statusText }
 })
