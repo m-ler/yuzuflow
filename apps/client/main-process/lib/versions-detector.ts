@@ -3,6 +3,7 @@ import path from 'node:path'
 import appWindows from '../app-windows'
 import { InstalledVersion } from '../types'
 import Store from 'electron-store'
+import { YuzuType } from 'shared'
 
 const store = new Store()
 
@@ -15,7 +16,7 @@ export default class VersionsDetector {
 		this.eaDirectory = (store.get('ea-download-directory') as string) || ''
 	}
 
-	private readFoo = (directory: string) => {
+	private readFoo = (directory: string, type: YuzuType) => {
 		if (!fs.existsSync(directory)) return []
 
 		const versions = []
@@ -28,6 +29,7 @@ export default class VersionsDetector {
 
 			try {
 				const versionData = JSON.parse(versionFile) as InstalledVersion
+				if (versionData.type !== type) continue
 				versionData.directory = path.join(directory, subDir)
 				versions.push(versionData)
 			} catch (e) {
@@ -40,8 +42,8 @@ export default class VersionsDetector {
 	}
 
 	updateInstalledVersions = () => {
-		const mainline = this.readFoo(this.mainlineDirectory)
-		const ea = this.readFoo(this.eaDirectory)
+		const mainline = this.readFoo(this.mainlineDirectory, 'mainline')
+		const ea = this.readFoo(this.eaDirectory, 'ea')
 		appWindows.main?.webContents.send('installed-versions/update', { mainline, ea })
 	}
 }
